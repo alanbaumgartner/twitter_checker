@@ -21,11 +21,10 @@ async def check_usernames(username, sem, session, loop=None):
     async with sem:
         try:
             async with session.get(URL.format(username)) as resp:
-                text = await resp.text()
-                if "Sorry, that page doesn’t exist!" in text:
-                    save_username(username, outputfile)
+                assert resp.status == 404
+                save_username(username, outputfile)
         except Exception:
-            print(Exception)
+            pass
 
 async def start_check(conns=50, loop=None):
     #Packs all usernames into a tasklist
